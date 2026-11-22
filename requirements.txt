@@ -1,0 +1,4 @@
+# Tested with Python 3.12.7 on Windows 10 (November 2026). Everything else is the Python standard library.
+networkx==3.4.2
+numpy==2.1.2
+scipy==1.15.1

@@ -1,0 +1,17 @@
+# Data never goes into this public repository (forum dumps, leaked chats, indictments, seed lists with real pseudonyms).
+# Keep the data directory outside version control — ideally in an encrypted container (see docs/reproduction.md).
+dane/
+data/
+*.sqlite
+*.sqlite-journal
+*.zip
+*.sql
+*.graphml
+*.pkl
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

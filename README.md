@@ -62,11 +62,27 @@ Hypotheses H1–H5 (discrimination, lead time, agentic advantage, component nece
 2. A documented, reusable evaluation protocol for LLM-driven behavioral analysis of underground forums (partially filling the benchmark gap identified in the reviews).
 3. Empirical evidence on the relative contribution of structural, behavioral, and content signals to the affiliation task.
 
+## Feasibility tests (November 2026)
+
+Before implementation we checked data access, labels and statistical power on recovered AZSecure forum archives, DOJ
+attribution and the Conti leak (including a semi-synthetic E6 injection of Conti's real communication structure).
+What we did, why, and what it means for the design: [`docs/feasibility_tests_2026-11.md`](docs/feasibility_tests_2026-11.md).
+How to reproduce it (data stays outside this repository): [`docs/reproduction.md`](docs/reproduction.md).
+
 ## Repository layout
 
 ```
 ├── README.md                        ← this file
-└── docs/
-    ├── design_proposal.pdf          ← full design proposal (problem, hypotheses, experiments)
-    └── literature_review.md         ← annotated literature table aligned with the proposal
+├── requirements.txt                 ← Python dependencies (tested versions)
+├── docs/
+│   ├── design_proposal.pdf          ← full design proposal (problem, hypotheses, experiments)
+│   ├── literature_review.md         ← annotated literature table aligned with the proposal
+│   ├── feasibility_tests_2026-11.md ← feasibility tests: what we did, why, results, open decisions
+│   └── reproduction.md              ← how to re-create the data and re-run every analysis
+└── scripts/
+    ├── reproduce.py                 ← reproduction driver (download → build → analyze → verify)
+    ├── expected/                    ← published checksums and key numbers used by the verify step
+    └── *.py                         ← data acquisition and analysis scripts (W1.1–W1.4, E6)
 ```
+
+No data is stored in this repository (see `.gitignore`).
