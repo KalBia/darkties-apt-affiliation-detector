@@ -1,0 +1,61 @@
+nick,grupa,typ_grupy,poziom,tier,zrodlo,data_publiczna
+fxmsp,fxmsp,finansowa,L3,gold,akt 2:18-cr-00303 (W.D.Wash.),2020-07-07
+Andej Turchin,fxmsp,finansowa,L1(fxmsp),gold,akt 2:18-cr-00303,2020-07-07
+Adik Dalv,fxmsp,finansowa,L1(fxmsp),gold,akt 2:18-cr-00303,2020-07-07
+Vadim bld,fxmsp,finansowa,L1(fxmsp),gold,akt 2:18-cr-00303,2020-07-07
+BigPetya,fxmsp,finansowa,L3,gold,akt 2:18-cr-00303,2020-07-07
+Lampeduza,fxmsp,finansowa,L3,gold,akt 2:18-cr-00303,2020-07-07
+Antony Moricone,fxmsp,finansowa,L3,gold,akt 2:18-cr-00303,2020-07-07
+Nikolay,fxmsp,finansowa,L3,gold,akt 2:18-cr-00303,2020-07-07
+Ares,fxmsp,finansowa,L3,gold,akt 2:18-cr-00303,2020-07-07
+HeroKuma,fxmsp,finansowa,L3,gold,akt 2:18-cr-00303,2020-07-07
+JimmBee,DanaBot,finansowa+szpiegowska,L3,gold,komunikat DOJ 2025-05-22,2025-05-22
+Onix,DanaBot,finansowa+szpiegowska,L3,gold,komunikat DOJ 2025-05-22,2025-05-22
+Coldface,APT27,panstwowa,L3,gold,komunikat DOJ 2025-03-05,2025-03-05
+YKC,APT27,panstwowa,L3,gold,komunikat DOJ 2025-03-05,2025-03-05
+YKCAI,APT27,panstwowa,L3,gold,akt 1:18-cr-00126 i 1:23-cr-00099 (D.D.C.),2025-03-05
+Magg,Yahoo/FSB,przestepcy+wywiad,L2,gold,komunikat DOJ 2017-03-15,2017-03-15
+Kay,Yahoo/FSB,przestepcy+wywiad,L2,gold,komunikat DOJ 2017-03-15,2017-03-15
+Patrick Nagel,Yahoo/FSB,panstwowa (oficer FSB),L3,gold,akt 5:17-cr-00103 (N.D.Cal.),2017-03-15
+Nosophoros,Thanos,finansowa(klient panstwowy),L2,gold,komunikat DOJ 2022-05-16,2022-05-16
+Aesculapius,Thanos,finansowa(klient panstwowy),L2,gold,komunikat DOJ 2022-05-16,2022-05-16
+Nebuchadnezzar,Thanos,finansowa(klient panstwowy),L2,gold,komunikat DOJ 2022-05-16,2022-05-16
+kiberphant0m,wymuszenia telekom,finansowa,L3,gold,komunikat DOJ 2025-07-15,2025-07-15
+J.P. Morgan,Ransom Cartel/malvertising,finansowa,L3,gold,komunikat DOJ 2024-08-12,2024-08-12
+lansky,Ransom Cartel/malvertising,finansowa,L3,gold,komunikat DOJ 2024-08-12,2024-08-12
+fubar,Darkode,finansowa,L3,gold,komunikat DOJ 2023-11-15,2023-11-15
+BadB,CarderPlanet/Carder.su,finansowa,L3,gold,komunikaty DOJ 2010-2015,2010-2015
+Boa,CarderPlanet/Carder.su,finansowa,L3,gold,komunikaty DOJ 2010-2015,2010-2015
+Track2,CarderPlanet/Carder.su,finansowa,L3,gold,komunikaty DOJ 2010-2015,2010-2015
+Kilobit,CarderPlanet/Carder.su,finansowa,L3,gold,komunikaty DOJ 2010-2015,2010-2015
+Bad Man,CarderPlanet/Carder.su,finansowa,L3,gold,komunikaty DOJ 2010-2015,2010-2015
+Fairbusinessman,CarderPlanet/Carder.su,finansowa,L3,gold,komunikaty DOJ 2010-2015,2010-2015
+SirCharlie57,CarderPlanet/Carder.su,finansowa,L3,gold,komunikaty DOJ 2010-2015,2010-2015
+flint,karty (Stroganov),finansowa,L3,gold,komunikat DOJ 2024-01-17,2024-01-17
+flint24,karty (Stroganov),finansowa,L3,gold,komunikat DOJ 2024-01-17,2024-01-17
+Key,karty (Stigal),finansowa,L3,gold,komunikat DOJ 2024-01-17,2024-01-17
+Gribodemon,SpyEye,finansowa,L3,gold,komunikat DOJ 2014-01-28,2014-01-28
+Bx1,SpyEye,finansowa,L3,gold,komunikat DOJ 2014-01-28,2014-01-28
+LockBitSupp,LockBit,finansowa,L3,gold,komunikat DOJ 2024-12-20,2024-05/2024-12
+putinkrab,LockBit,finansowa,L3,gold,komunikat DOJ 2024-12-20,2024-05/2024-12
+Bentley,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Buza,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Mango,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Defender,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Grad,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Staff,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Begemot,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Zulas,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Baget,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Globus,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Maxfax,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Maxhax,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Kagas,Conti/TrickBot (Wizard Spider),finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07
+Popopret,TheRealDeal market,finansowa,L3,gold,komunikat DOJ 2022-10-26,2022-10-26
+Bestbuy,TheRealDeal market,finansowa,L3,gold,komunikat DOJ 2022-10-26,2022-10-26
+TheRealDeal,TheRealDeal market,finansowa,L3,gold,komunikat DOJ 2022-10-26,2022-10-26
+Spdrman,TheRealDeal market,finansowa,L3,gold,komunikat DOJ 2022-10-26,2022-10-26
+UserL0ser,TheRealDeal market,finansowa,L3,gold,komunikat DOJ 2022-10-26,2022-10-26
+Alipako,botnet (Lefterov),finansowa,L3,gold,komunikat DOJ 2024-04-16,2024-04-16
+Uptime,botnet (Lefterov),finansowa,L3,gold,komunikat DOJ 2024-04-16,2024-04-16
+Alipatime,botnet (Lefterov),finansowa,L3,gold,komunikat DOJ 2024-04-16,2024-04-16
