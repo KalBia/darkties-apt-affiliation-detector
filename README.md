@@ -74,6 +74,7 @@ How to reproduce it (data stays outside this repository): [`docs/reproduction.md
 ```
 ├── README.md                        ← this file
 ├── requirements.txt                 ← Python dependencies (tested versions)
+├── inputs/                          ← hand-made input lists (seeds from DOJ attribution, candidate lists)
 ├── docs/
 │   ├── design_proposal.pdf          ← full design proposal (problem, hypotheses, experiments)
 │   ├── literature_review.md         ← annotated literature table aligned with the proposal
@@ -85,4 +86,4 @@ How to reproduce it (data stays outside this repository): [`docs/reproduction.md
     └── *.py                         ← data acquisition and analysis scripts (W1.1–W1.4, E6)
 ```
 
-No data is stored in this repository (see `.gitignore`).
+No forum posts or chat contents are stored in this repository (see `.gitignore`); downloaded data stays outside it.

@@ -11,12 +11,13 @@ Usage (from the repository root; the data directory must be OUTSIDE version cont
 Steps: download (DOJ API, AZSecure via Wayback Machine, Conti leak from the paper's repository, DOJ indictments via
 Wayback) → build (SQLite corpus, dates, seed list, Conti graph) → analyze (W1.1, W1.2, W1.3/W1.4, E6) → verify.
 
-Private inputs (real pseudonyms — never committed; see docs/reproduction.md for format and sources):
-    <data>/ziarna/ziarna_reczne.csv     manually verified seeds from DOJ press releases / indictments
-    <data>/ziarna/conti_role_doj.txt    personas with roles named in the 2023 DOJ TrickBot/Conti release
-    <data>/ziarna/kandydaci_b0.txt      NICK@FORUM candidates for the metadata review (optional)
-    <data>/ziarna/kandydaci_w12.txt     NICK@FORUM candidates reported in the graph statistics (optional)
-Steps that need a missing private input are skipped with a message.
+Hand-made inputs are versioned in the repository (inputs/) and copied into <data>/ziarna/ by the step "inputs":
+    ziarna_reczne.csv     seeds verified by hand in DOJ press releases and indictments (pseudonyms, group, level, tier,
+                          source, public date); Infraud/GozNym seeds are added automatically by ziarna_buduj.py
+    conti_role_doj.txt    personas whose roles are named in the DOJ TrickBot/Conti release of 2023-09-07
+    kandydaci_b0.txt      NICK@forum candidates selected for the metadata review (W1.1)
+    kandydaci_w12.txt     NICK@forum candidates reported in the graph statistics (W1.2)
+An existing file in <data>/ziarna/ is never overwritten; a differing one is reported.
 
 Each sub-script is run as `python -I -X utf8 <script> ...` (isolated mode: downloaded data cannot shadow modules).
 """
@@ -24,6 +25,29 @@ import argparse, csv, hashlib, json, os, re, sqlite3, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXP = os.path.join(HERE, "expected")
+INPUTS = os.path.join(HERE, "..", "inputs")
+
+
+def copy_inputs(D):
+    """Step "inputs": copy hand-made inputs from the repository into <data>/ziarna/ (never overwrite)."""
+    if not os.path.isdir(INPUTS):
+        print(f"   no {os.path.normpath(INPUTS)} directory - nothing to copy")
+        return 0
+    cel = os.path.join(D, "ziarna")
+    os.makedirs(cel, exist_ok=True)
+    rozne = 0
+    for n in sorted(os.listdir(INPUTS)):
+        src, dst = os.path.join(INPUTS, n), os.path.join(cel, n)
+        dane = open(src, "rb").read()
+        if not os.path.exists(dst):
+            open(dst, "wb").write(dane)
+            print(f"   copied {n}")
+        elif open(dst, "rb").read() == dane:
+            print(f"   {n}: already present, identical")
+        else:
+            rozne += 1
+            print(f"   WARN {n}: already present and DIFFERENT from inputs/ - not overwritten")
+    return 0 if rozne == 0 else 1
 
 
 def s(name):
@@ -35,10 +59,8 @@ def plan(D):
     db = j("azsecure", "azsecure.sqlite")
     seeds = j("ziarna", "ziarna_v0.csv")
     roles = j("ziarna", "conti_role_doj.txt")
-    lines = lambda p: [x.strip() for x in open(p, encoding="utf-8") if x.strip()] if os.path.exists(p) else []
     st = []
-    add = lambda grp, name, cmd, needs=(), out=None, shown=None: st.append((grp, name, cmd, list(needs), out, shown))
-    private = lambda p: (lines(p), [f"<{len(lines(p))} NICK@forum from {os.path.basename(p)}>"] if lines(p) else [])
+    add = lambda grp, name, cmd, needs=(), out=None: st.append((grp, name, cmd, list(needs), out))
     # download
     add("download", "doj_sweep", [s("doj_sweep.py"), j("doj_2026-11-17")])
     add("download", "azsecure", [s("azsecure_pobierz.py"), j("azsecure")])
@@ -47,19 +69,20 @@ def plan(D):
     # build
     add("build", "sqlite", [s("azsecure_do_sqlite.py"), j("azsecure")])
     add("build", "dates", [s("azsecure_daty.py"), db])
-    add("build", "seeds", [s("ziarna_buduj.py"), j("doj_2026-11-17", "doj_kandydaci.json"),
-                           j("ziarna", "ziarna_reczne.csv"), seeds], [j("ziarna", "ziarna_reczne.csv")])
+    reczne = j("ziarna", "ziarna_reczne.csv")
+    add("build", "inputs", "copy_inputs")  # internal step: inputs/ -> <data>/ziarna/
+    add("build", "seeds", [s("ziarna_buduj.py"), j("doj_2026-11-17", "doj_kandydaci.json"), reczne, seeds], [reczne])
     add("build", "conti_graph", [s("conti_struktura.py"), j("conti", "surowe"), seeds, j("conti")], [seeds])
     add("build", "conti_nicks", [s("conti_nicki.py"), j("conti", "surowe"), j("conti", "conti_nicki.csv")])
     # analyze
-    add("analyze", "w11_match", [s("w11_dopasuj_ziarna.py"), seeds, db, j("azsecure", "w11_dopasowania.csv")], [seeds])
-    b0, b0_shown = private(j("ziarna", "kandydaci_b0.txt"))
-    base = [s("w11_b0_metadane.py"), db, j("azsecure", "w11_b0_metadane.txt")]
-    add("analyze", "w11_b0", base + b0, [j("ziarna", "kandydaci_b0.txt")], shown=base + b0_shown)
+    w11 = j("azsecure", "w11_dopasowania.csv")
+    add("analyze", "w11_match", [s("w11_dopasuj_ziarna.py"), seeds, db, w11], [seeds])
+    # ("@lines", path) = NICK@forum list read when the step runs
+    add("analyze", "w11_b0", [s("w11_b0_metadane.py"), db, j("azsecure", "w11_b0_metadane.txt"),
+                              ("@lines", j("ziarna", "kandydaci_b0.txt"))], [j("ziarna", "kandydaci_b0.txt")])
     add("analyze", "w12_profile", [s("w12_profil_struktury.py"), db, j("azsecure", "w12_profil_struktury.txt")])
-    w12, w12_shown = private(j("ziarna", "kandydaci_w12.txt"))
-    base = [s("w12_graf.py"), db, j("azsecure", "grafy"), j("azsecure", "w12_graf.txt")]
-    add("analyze", "w12_graphs", base + w12, shown=base + w12_shown)
+    add("analyze", "w12_graphs", [s("w12_graf.py"), db, j("azsecure", "grafy"), j("azsecure", "w12_graf.txt"),
+                                  ("@lines", j("ziarna", "kandydaci_w12.txt"))], [j("ziarna", "kandydaci_w12.txt")])
     g = lambda f: j("azsecure", "grafy", f"{f}_eve_b.csv")
     for nazwa, extra in (("w13_damagelab", [g("damagelab"), "1,3,10,30,100"]),
                          ("w13_damagelab_osadzony", [g("damagelab"), "1,2,4", "osadzony"]),
@@ -145,23 +168,32 @@ def main():
         except ImportError:
             print(f"MISSING {mod} (pip install -r requirements.txt)")
     print(f"python {sys.version.split()[0]} (tested: 3.12.7)\n")
-    for grp, name, cmd, needs, out, shown in plan(D):
+    def rel(x):  # no absolute paths (user names) in the output; other drive (e.g. encrypted volume) stays absolute
+        try:
+            return os.path.relpath(x) if os.path.isabs(x) else x
+        except ValueError:
+            return x
+    for grp, name, cmd, needs, out in plan(D):
         if (a.only and name != a.only) or (not a.only and grp not in grupy):
             continue
-        brak = [p for p in needs if not os.path.exists(p)]
-        full = [sys.executable, "-I", "-X", "utf8"] + cmd
-        def rel(x):  # no absolute paths (user names) in the output; other drive (e.g. encrypted volume) stays absolute
-            try:
-                return os.path.relpath(x) if os.path.isabs(x) else x
-            except ValueError:
-                return x
-        print(f"[{grp}/{name}] python -I -X utf8 " + " ".join(f'"{rel(x)}"' if " " in x else rel(x) for x in (shown or cmd))
+        if cmd == "copy_inputs":
+            print(f"[{grp}/{name}] copy inputs/ -> {rel(os.path.join(D, 'ziarna'))}")
+            if not a.dry_run and copy_inputs(D) != 0:
+                sys.exit("step inputs failed: a file in the data directory differs from inputs/ (see WARN above)")
+            continue
+        shown = [f"<NICK@forum list from {os.path.basename(x[1])}>" if isinstance(x, tuple) else rel(x) for x in cmd]
+        print(f"[{grp}/{name}] python -I -X utf8 " + " ".join(f'"{x}"' if " " in x else x for x in shown)
               + (f" > {out}" if out else ""))
+        brak = [p for p in needs if not os.path.exists(p)]
         if brak:
-            print(f"   SKIPPED - missing private input: {', '.join(brak)} (docs/reproduction.md)")
+            print(f"   SKIPPED - missing input: {', '.join(rel(p) for p in brak)} (see the messages above / docs/reproduction.md)")
             continue
         if a.dry_run:
             continue
+        lines = lambda p: [x.rstrip("\r\n") for x in open(p, encoding="utf-8") if x.strip()]
+        full = [sys.executable, "-I", "-X", "utf8"]
+        for x in cmd:
+            full += lines(x[1]) if isinstance(x, tuple) else [x]
         if out:
             with open(out, "w", encoding="utf-8") as f:
                 r = subprocess.run(full, stdout=f)

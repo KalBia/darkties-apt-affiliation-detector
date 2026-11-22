@@ -47,7 +47,8 @@ a source are marked as assumptions.
 Handling rules we applied: data is kept **outside the repository**, in an encrypted container; raw files
 are read-only; nothing from the data is executed (scripts run Python in isolated mode, pickle files are never
 downloaded); raw post or chat content is not sent to external model APIs; this public repository contains code,
-checksums and aggregate numbers only — no forum data and no real pseudonyms. We did not bypass anti-bot protections
+checksums, aggregate numbers and a few hand-made input lists (seed pseudonyms, candidate lists — `inputs/`), but no
+forum posts and no chat contents. We did not bypass anti-bot protections
 or paywalls; where a page blocked automated access we used an official API, an open-access copy or the Internet Archive.
 
 ## 3. Labels (feasibility test W0.2 / W1.1)

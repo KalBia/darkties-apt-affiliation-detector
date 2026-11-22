@@ -2,7 +2,7 @@
 
 This guide re-creates, from public sources, the data and every number in
 [`docs/feasibility_tests_2026-11.md`](feasibility_tests_2026-11.md). The repository contains **code, checksums and
-aggregate numbers only** — no forum data, no leaked chats and no real pseudonyms. You download the data yourself;
+a few hand-made input lists** (`inputs/`) — no forum posts and no leaked chats. You download the data yourself;
 `scripts/reproduce.py` then checks that you got exactly the same files and results.
 
 ## 1. Before you start — handling the data
@@ -16,8 +16,9 @@ names. Please follow the team's rules:
 - Downloaded archives and documents are made read-only by the download scripts. **Never execute anything from the data** and do not open the
   dumps in tools that run macros or scripts. The scripts run Python in isolated mode (`-I`) so that a downloaded
   file cannot shadow a Python module; pickle files are never downloaded.
-- Do **not** send raw posts or chat contents to external LLM APIs (pending the supervisor's decision on data-use terms).
-- Do not commit outputs that contain pseudonyms (match tables, candidate lists, edge lists).
+- Be careful with the **content of forum posts and chats** — it can contain disturbing or illegal material. Do not
+  commit it, and do not send it to external LLM APIs (pending the supervisor's decision on data-use terms).
+  Pseudonyms, candidate lists and other derived tables are fine.
 
 ## 2. Requirements
 
@@ -27,19 +28,20 @@ names. Please follow the team's rules:
   `web.archive.org` and `raw.githubusercontent.com`.
 - Run all commands from the repository root.
 
-## 3. Private inputs (not in the repository)
+## 3. Hand-made inputs (`inputs/`)
 
-Four small files contain real pseudonyms and are shared inside the team only (not by e-mail to third parties). Put
-them in `dane/ziarna/`. Steps that need a missing file are skipped with a message; everything else still runs.
+Four small lists were prepared by hand during the work and are versioned in `inputs/`; the step `inputs` of
+`reproduce.py` copies them into `dane/ziarna/` (an existing file there is never overwritten — a differing one stops the
+run with a warning).
 
-| File | Content | Format |
+| File | Content | How it was made |
 |---|---|---|
-| `ziarna_reczne.csv` | seeds verified by hand in DOJ press releases and indictments (60 rows; sources: access-broker indictment 2:18-cr-00303 W.D. Wash.; DOJ releases on DanaBot 2025-05-22, APT27/i-Soon 2025-03-05, Yahoo/FSB 2017-03-15, Thanos 2022-05-16, TrickBot/Conti 2023-09-07 and others listed in the `zrodlo` column) | CSV with columns `nick,grupa,typ_grupy,poziom,tier,zrodlo,data_publiczna` — e.g. `example_nick,ExampleGroup,finansowa,L3,gold,komunikat DOJ 2023-09-07,2023-09-07` |
-| `conti_role_doj.txt` | the 4 personas whose roles are named in the DOJ TrickBot/Conti release of 2023-09-07 | one pseudonym per line, lower case |
-| `kandydaci_b0.txt` (optional) | candidates for the metadata review (W1.1 b0) | one `NICK@forum` per line |
-| `kandydaci_w12.txt` (optional) | candidates whose degree is reported in the graph statistics (W1.2) | one `NICK@forum` per line |
+| `ziarna_reczne.csv` | 60 seeds: pseudonym, group, group type, affiliation level, tier, source, public date | read by hand in DOJ press releases and indictments (sources in the `zrodlo` column); the Infraud and GozNym seeds are added automatically later by `ziarna_buduj.py` |
+| `conti_role_doj.txt` | the 4 personas whose roles are named in the DOJ TrickBot/Conti release of 2023-09-07 | from that release |
+| `kandydaci_b0.txt` | 17 `NICK@forum` candidates selected for the metadata review (W1.1) | chosen by hand from the W1.1 string matches |
+| `kandydaci_w12.txt` | 8 `NICK@forum` candidates reported in the graph statistics (W1.2) | subset of the above |
 
-The Infraud and GozNym seeds are extracted automatically from the DOJ releases; only the hand-checked ones are private.
+The candidate lists are working artefacts (string matches, not confirmed identities), not attributions.
 
 ## 4. One command
 
@@ -59,10 +61,11 @@ download is not included; the DOJ API sweep was not timed):
 | download | DOJ indictments (Wayback) | `doj_akty_pobierz.py` | `doj_akty/` | ~25 s |
 | build | SQLite corpus | `azsecure_do_sqlite.py` | `azsecure/azsecure.sqlite` | ~1.5 min together with the next step |
 | build | date normalisation | `azsecure_daty.py` | table `daty` | (see above) |
+| build | copy hand-made inputs (section 3) | (built in) | `ziarna/` | < 1 s |
 | build | seed list | `ziarna_buduj.py` | `ziarna/ziarna_v0.csv` | < 1 s |
 | build | Conti graph check and rebuild | `conti_struktura.py` | `conti/conti_struktura.txt`, `conti/conti_krawedzie.csv` | ~1 s |
 | build | Conti name list | `conti_nicki.py` | `conti/conti_nicki.csv` | ~1 s |
-| analyze | W1.1 seed matching, metadata review | `w11_dopasuj_ziarna.py`, `w11_b0_metadane.py` | `azsecure/w11_*` | ~1 s |
+| analyze | W1.1 seed matching, metadata review of the candidates | `w11_dopasuj_ziarna.py`, `w11_b0_metadane.py` | `azsecure/w11_*` | ~1 s |
 | analyze | W1.2 structure profile, reply graphs | `w12_profil_struktury.py`, `w12_graf.py` | `azsecure/w12_*`, `azsecure/grafy/` | ~10 s |
 | analyze | W1.3/W1.4 synthetic injection (4 runs) + summaries | `w13_wstrzykiwanie.py`, `w13_podsumuj.py` | `azsecure/w13_*` | ~6 min in total |
 | analyze | E6 Conti injection (RuTor, AntiChat) + summaries | `e6_conti_wstrzykniecie.py`, `e6_podsumuj.py` | `conti/e6_*` | ~10 min / ~33 min |
